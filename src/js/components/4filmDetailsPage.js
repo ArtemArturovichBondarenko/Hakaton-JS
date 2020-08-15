@@ -1,16 +1,5 @@
-// // import './css/normalise.css';
-// // import './css/reset.css';
-// // import './css/fonts.css';
-// // import './css/container.css';
-// // import './css/styles.css';
-// import axios from 'axios';
-// import markupTemplate from '../../templates/4filmDetailsPage.hbs';
-
-
-
-// //==================axios==============
-// // let selectFilm = {};
-// export default {}
+import fetchRequest from '../fetchRequest.js';
+import markupTemplate from '../../templates/4filmDetailsPage.hbs';
 
 const changingWidthPicture = () => {
   if (window.innerWidth >= 768 && window.innerWidth <= 1023) {
@@ -36,116 +25,101 @@ const changingWidthPicture = () => {
 //     // console.log(typeof selectFilm.id);
 //   });
 
+export default function (moveId) {
+  setSelectFilm(moveId);
 
-import fetchRequest from '../fetchRequest.js'
-import markupTemplate from '../../templates/4filmDetailsPage.hbs';
-// import filmDetailsPage from '../components/4filmDetailsPage.js';
+  window.onload = function () {
+    monitorButtonStatusText();
+    const button_watched = document.querySelector('#button_watched');
+    button_watched.addEventListener('click', toggleToWatched);
 
+    const button_queue = document.querySelector('#button_queue');
+    button_queue.addEventListener('click', toggleToQueue);
+  };
 
+  const monitorButtonStatusText = () => {
+    const button_watched = document.querySelector('#button_watched');
+    const button_queue = document.querySelector('#button_queue');
 
+    const watchedFilms = JSON.parse(localStorage.getItem('filmsWatched')) || [];
+    const queueFilms = JSON.parse(localStorage.getItem('filmsQueue')) || [];
 
-export default function (moveId){
-    
-    
-    // console.log(genres);
-    // maketView();
-    setSelectFilm(moveId);
-    
-    window.onload = function () {
-        monitorButtonStatusText();
-        const button_watched = document.querySelector('#button_watched');
-        button_watched.addEventListener('click', toggleToWatched);
-      
-        const button_queue = document.querySelector('#button_queue');
-        button_queue.addEventListener('click', toggleToQueue);
-      };
-      
-      const monitorButtonStatusText = () => {
-        const button_watched = document.querySelector('#button_watched');
-        const button_queue = document.querySelector('#button_queue');
-      
-        const watchedFilms = JSON.parse(localStorage.getItem('filmsWatched')) || [];
-        const queueFilms = JSON.parse(localStorage.getItem('filmsQueue')) || [];
-      
-        const filterWatchedFIlms = watchedFilms.includes(selectFilm.id);
-        const filteredQueUeFilms = queueFilms.includes(selectFilm.id);
-      
-        if (filterWatchedFIlms) {
-          button_watched.textContent = 'Remove from viewed';
-          button_watched.classList.remove('detailPage_video_on');
-          button_watched.classList.add('detailPage_video_off');
-        } else {
-          button_watched.textContent = 'Add to viewed';
-          button_watched.classList.remove('detailPage_video_off');
-          button_watched.classList.add('detailPage_video_on');
-        }
-      
-        if (filteredQueUeFilms) {
-          button_queue.textContent = 'Remove from queue';
-          button_queue.classList.remove('detailPage_calendar_plus');
-          button_queue.classList.add('detailPage_calendar_minus');
-        } else {
-          button_queue.textContent = 'Add to queue';
-          button_queue.classList.remove('detailPage_calendar_minus');
-          button_queue.classList.add('detailPage_calendar_plus');
-        }
-      };
-      
-      const toggleToWatched = () => {
-        let watchedFilms = JSON.parse(localStorage.getItem('filmsWatched')) || [];
-        const filteredWatchedFilms = watchedFilms.includes(selectFilm.id)
-          ? watchedFilms.filter(filmId => filmId !== selectFilm.id)
-          : [...watchedFilms, selectFilm.id];
-        localStorage.setItem('filmsWatched', JSON.stringify(filteredWatchedFilms));
-        monitorButtonStatusText();
-      };
-      
-      const toggleToQueue = () => {
-        let queueFilms = JSON.parse(localStorage.getItem('filmsQueue')) || [];
-        const filteredQueUeFilms = queueFilms.includes(selectFilm.id)
-          ? queueFilms.filter(filmId => filmId !== selectFilm.id)
-          : [...queueFilms, selectFilm.id];
-        localStorage.setItem('filmsQueue', JSON.stringify(filteredQueUeFilms));
-        monitorButtonStatusText();
-      };
+    const filterWatchedFIlms = watchedFilms.includes(selectFilm.id);
+    const filteredQueUeFilms = queueFilms.includes(selectFilm.id);
 
-      
-}
-//==============================================================================
-function setSelectFilm(moveId){
-    console.log(`setSelectFilm`);
-    // fetchRequest.fetchMovieDetails(moveId).then(date => {
-    //     Object.assign(selectFilm, date)
-    //     maketView(selectFilm);
-    // });
-    // maketView(selectFilm);
-    
-    
-    fetchRequest.fetchMovieDetails(moveId).then(maketView);
-    maketView(selectFilm);
-    
-    // insertDetailsPage(movie)
-}
-
-  function maketView(selectFilmLocal){
-        
-        // selectFilm.changingWidthPicture = changingWidthPicture();
-        const movie = bildDetailsPage(selectFilmLocal);
-        insertDetailsPage(movie);
+    if (filterWatchedFIlms) {
+      button_watched.textContent = 'Remove from viewed';
+      button_watched.classList.remove('detailPage_video_on');
+      button_watched.classList.add('detailPage_video_off');
+    } else {
+      button_watched.textContent = 'Add to viewed';
+      button_watched.classList.remove('detailPage_video_off');
+      button_watched.classList.add('detailPage_video_on');
     }
 
+    if (filteredQueUeFilms) {
+      button_queue.textContent = 'Remove from queue';
+      button_queue.classList.remove('detailPage_calendar_plus');
+      button_queue.classList.add('detailPage_calendar_minus');
+    } else {
+      button_queue.textContent = 'Add to queue';
+      button_queue.classList.remove('detailPage_calendar_minus');
+      button_queue.classList.add('detailPage_calendar_plus');
+    }
+  };
+
+  const toggleToWatched = () => {
+    let watchedFilms = JSON.parse(localStorage.getItem('filmsWatched')) || [];
+    const filteredWatchedFilms = watchedFilms.includes(selectFilm.id)
+      ? watchedFilms.filter(filmId => filmId !== selectFilm.id)
+      : [...watchedFilms, selectFilm.id];
+    localStorage.setItem('filmsWatched', JSON.stringify(filteredWatchedFilms));
+    monitorButtonStatusText();
+  };
+
+  const toggleToQueue = () => {
+    let queueFilms = JSON.parse(localStorage.getItem('filmsQueue')) || [];
+    const filteredQueUeFilms = queueFilms.includes(selectFilm.id)
+      ? queueFilms.filter(filmId => filmId !== selectFilm.id)
+      : [...queueFilms, selectFilm.id];
+    localStorage.setItem('filmsQueue', JSON.stringify(filteredQueUeFilms));
+    monitorButtonStatusText();
+  };
+}
+//==============================================================================
+function setSelectFilm(moveId) {
+  fetchRequest.fetchMovieDetails(moveId).then(maketView);
+  maketView(selectFilm);
+}
+
+function maketView(selectFilmLocal) {
+  // let result
+  //  function fg() {
+  //   selectFilmLocal.release_date = selectFilmLocal.release_date.slice(0, 4);
+  //   selectFilmLocal.genres = selectFilmLocal.genres.map(d =>
+  //     d.name.toLowerCase(),
+  //   );
+  //   selectFilmLocal.changingWidthPicture = changingWidthPicture();
+  //    Object.assign(selectFilmLocal, fg);
+  // };
+  // console.log(selectFilmLocal);
+  const movie = bildDetailsPage(selectFilmLocal);
+  insertDetailsPage(movie);
+}
+
 function insertDetailsPage(markup) {
-    const refs = {
-        div: document.querySelector('#detailsPage'),
-      };
+  const refs = {
+    div: document.querySelector('#detailsPage'),
+  };
   refs.div.innerHTML = markup;
 }
 
-
-
 function bildDetailsPage(items) {
-    console.log(`bildDetailsPage`);
-    console.log(items);
-    console.log(genres);
+  async function fg() {
+    items.release_date = items.release_date.slice(0, 4);
+    items.genres = items.genres.map(d => d.name.toLowerCase());
+    items.changingWidthPicture = changingWidthPicture();
+  }
+  Object.assign(items, fg());
   return markupTemplate(items);
 }

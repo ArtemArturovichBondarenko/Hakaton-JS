@@ -1,7 +1,5 @@
 export default function (props) {
-    console.log(`view`);
-    return `
-
+  return `
       <div class="search-wrapper">
         <form id="search-form" class="form_search">
           <input
@@ -21,15 +19,6 @@ export default function (props) {
 
       <div class="pagination">
         <button tupe="button" data-action="load-more" class="load-more-Btn">Next page</button> 
-      </div>
-
-    
+      </div>    
     `;
 }
-
-{/* <div class="pagination">
-<button class="btn-prev" disabled>Prev</button>
-<span class="current-page">1</span>
-<button class="btn-next">Next</button>
-</div> */}
-
